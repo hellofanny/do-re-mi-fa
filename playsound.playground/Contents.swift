@@ -1,16 +1,27 @@
 //: A UIKit based Playground for presenting user interface
   
 import UIKit
+import AudioToolbox
 import PlaygroundSupport
 
 class MyViewController : UIViewController {
     
     let squareView = UIView()
     
+    var sounds : [SystemSoundID] = [0, 1, 2, 3]
+    
     override func loadView() {
         
         let view = UIView()
         view.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        
+        for index in 0...sounds.count-1 {
+            let fileName : String = "sound\(sounds[index])"
+            
+            if let soundURL = Bundle.main.url(forResource: fileName, withExtension: "wav") {
+            AudioServicesCreateSystemSoundID(soundURL as CFURL, &sounds[index])
+            }
+        }
 
         let label = UILabel()
         label.frame = CGRect(x: 150, y: 20, width: 200, height: 20)
@@ -33,8 +44,10 @@ class MyViewController : UIViewController {
         switch (sender.tag) {
         case 0:
             print("pink")
+            AudioServicesPlaySystemSound(sounds[0])
         case 1:
             print("yellow")
+            AudioServicesPlaySystemSound(sounds[1])
         case 2:
             print("green")
         case 3:
