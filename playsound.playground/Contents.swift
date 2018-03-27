@@ -2,6 +2,7 @@
   
 import UIKit
 import AudioToolbox
+import AVFoundation
 import PlaygroundSupport
 
 class MyViewController : UIViewController {
@@ -9,6 +10,14 @@ class MyViewController : UIViewController {
     let squareView = UIView()
     
     var sounds : [SystemSoundID] = [0, 1, 2, 3]
+    
+    var roundSounds : [SystemSoundID] = [3,0,1,2,1]
+    
+    let pinkBtn = UIButton()
+    let yellowBtn = UIButton()
+    let greenBtn = UIButton()
+    let purpleBtn = UIButton()
+    
     
     override func loadView() {
         
@@ -22,10 +31,30 @@ class MyViewController : UIViewController {
             AudioServicesCreateSystemSoundID(soundURL as CFURL, &sounds[index])
             }
         }
+      
+        
+        
+        func playSequence(index: Int){
+            let shouldPlay = (index <= roundSounds.count-1)
+            if shouldPlay {
+                AudioServicesPlaySystemSoundWithCompletion(sounds[Int(self.roundSounds[index])], {
+          
+            print(self.sounds[Int(self.roundSounds[index])])
+            print(self.roundSounds[index])
+                    playSequence(index: index+1)
+                })
+            }
+        }
+        
+        playSequence(index: 0)
+        
 
+        
+        
+        
         let label = UILabel()
         label.frame = CGRect(x: 150, y: 20, width: 200, height: 20)
-        label.text = "Hello World!"
+        label.text = "Play with me!"
         label.textColor = .black
         
         view.addSubview(label)
@@ -43,15 +72,17 @@ class MyViewController : UIViewController {
     @objc func buttonAction(sender: UIButton) {
         switch (sender.tag) {
         case 0:
-            print("pink")
+            print("pink", sounds[0] )
             AudioServicesPlaySystemSound(sounds[0])
         case 1:
-            print("yellow")
+            print("yellow", sounds[1])
             AudioServicesPlaySystemSound(sounds[1])
         case 2:
-            print("green")
+            print("green", sounds[2])
+            AudioServicesPlaySystemSound(sounds[2])
         case 3:
-            print("purple")
+            print("purple", sounds[3])
+            AudioServicesPlaySystemSound(sounds[3])
         default:
             print("Something went wrong 🤔")
         }
@@ -61,18 +92,14 @@ class MyViewController : UIViewController {
     func setupButtons() {
         
         //Pink button
-        let pinkBtn = UIButton()
         pinkBtn.setImage(UIImage(named: "pink_btn"), for: .normal)
         pinkBtn.setImage(UIImage(named: "pink_btn_on"), for: .highlighted)
         pinkBtn.frame = CGRect(x: (squareView.frame.width)/2 - 30, y: 0, width: 60, height: 60)
         pinkBtn.tag = 0
         pinkBtn.addTarget(self, action: #selector(buttonAction(sender:)), for: .touchUpInside)
-        
-        
         squareView.addSubview(pinkBtn)
         
         //Yellow button
-        let yellowBtn = UIButton()
         yellowBtn.setImage(UIImage(named: "yellow_btn"), for: .normal)
         yellowBtn.setImage(UIImage(named: "yellow_btn_on"), for: .highlighted)
         yellowBtn.frame = CGRect(x: (squareView.frame.width)/2 - 30, y: squareView.frame.height - 60 , width: 60, height: 60)
@@ -81,7 +108,6 @@ class MyViewController : UIViewController {
         squareView.addSubview(yellowBtn)
         
         //Green button
-        let greenBtn = UIButton()
         greenBtn.setImage(UIImage(named: "green_btn"), for: .normal)
         greenBtn.setImage(UIImage(named: "green_btn_on"), for: .highlighted)
         greenBtn.frame = CGRect(x: 0, y: (squareView.frame.height/2) - 30 , width: 60, height: 60)
@@ -90,7 +116,6 @@ class MyViewController : UIViewController {
         squareView.addSubview(greenBtn)
         
         //Purple button
-        let purpleBtn = UIButton()
         purpleBtn.setImage(UIImage(named: "purple_btn"), for: .normal)
         purpleBtn.setImage(UIImage(named: "purple_btn_on"), for: .highlighted)
         purpleBtn.frame = CGRect(x: (squareView.frame.width)/2 + 40 , y: (squareView.frame.height/2) - 30 , width: 60, height: 60)
@@ -100,9 +125,7 @@ class MyViewController : UIViewController {
         
     }
     
-    
-   
-    
+
 }
 // Present the view controller in the Live View window
 let viewController = MyViewController()
