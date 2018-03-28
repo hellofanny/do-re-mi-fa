@@ -4,6 +4,9 @@ import UIKit
 import AVFoundation
 import PlaygroundSupport
 
+let cfURL = Bundle.main.url(forResource: "Cardenio Modern Bold", withExtension: "ttf")! as CFURL
+CTFontManagerRegisterFontsForURL(cfURL, CTFontManagerScope.process, nil)
+
 class MyViewController : UIViewController, AVAudioPlayerDelegate {
     
     let squareView = UIView()
@@ -50,11 +53,10 @@ modeBtn.setImage(UIImage(named: "gameMode_btn"), for: .normal)
          self.modeBtn.addTarget(self, action: #selector(changeMode), for: .touchUpInside)
         view.addSubview(modeBtn)
         
-        
-
         self.label.frame = CGRect(x: 200, y: 400, width: 200, height: 20)
+        self.label.textColor = .gray
+        self.label.font = UIFont(name: "Cardenio Modern", size: 22)
         self.label.text = "Play with me!"
-        self.label.textColor = .black
         view.addSubview(self.label)
         
         
