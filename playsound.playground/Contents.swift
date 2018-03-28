@@ -7,6 +7,8 @@ import PlaygroundSupport
 class MyViewController : UIViewController, AVAudioPlayerDelegate {
     
     let squareView = UIView()
+    
+    var doremifaMode : Mode = Mode.GameMode
 
     var sounds = [AVAudioPlayer]()
     let soundsNames = ["sound_pink", "sound_yellow", "sound_green", "sound_purple"]
@@ -18,7 +20,8 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate {
     let purpleBtn = UIButton()
     
     let startBtn = UIButton()
-     let label = UILabel()
+    let label = UILabel()
+    let modeBtn = UIButton()
     
     
     //save the sound sequence of the game
@@ -39,14 +42,23 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate {
         let logoView = UIImageView(image: UIImage(named: "doremifa_logo"))
         logoView.frame = CGRect(x: 150, y: 20, width: 180, height: 77)
         view.addSubview(logoView)
+        
+       
+modeBtn.setImage(UIImage(named: "gameMode_btn"), for: .normal)
+        modeBtn.setImage(UIImage(named: "freestyle_btn"), for: .highlighted )
+         self.modeBtn.frame = CGRect(x: 170, y: logoView.frame.origin.y + 85 , width: 152, height: 25)
+         self.modeBtn.addTarget(self, action: #selector(changeMode), for: .touchUpInside)
+        view.addSubview(modeBtn)
+        
+        
 
-        self.label.frame = CGRect(x: 200, y: 100, width: 200, height: 20)
+        self.label.frame = CGRect(x: 200, y: 400, width: 200, height: 20)
         self.label.text = "Play with me!"
         self.label.textColor = .black
         view.addSubview(self.label)
         
         
-        self.startBtn.frame = CGRect(x: 200, y: 120, width: 100, height: 20)
+        self.startBtn.frame = CGRect(x: 200, y: 380, width: 100, height: 20)
         self.startBtn.setTitle("Start Game", for: .normal)
         self.startBtn.backgroundColor = #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1)
         self.startBtn.addTarget(self, action: #selector(startGame), for: .touchUpInside)
@@ -63,10 +75,27 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate {
     
     @objc func buttonAction(sender: UIButton) {
         
-        sounds[sender.tag].play()
-        print("buttonPressed: ", sender.tag)
-        checkPressedButton(buttonPressed: sender.tag)
+        if doremifaMode == Mode.Freestyle {
+            sounds[sender.tag].play()
+        } else {
+            sounds[sender.tag].play()
+            print("buttonPressed: ", sender.tag)
+            checkPressedButton(buttonPressed: sender.tag)
+        }
     }
+    
+    @objc func changeMode() {
+        if doremifaMode == Mode.GameMode {
+            doremifaMode = Mode.Freestyle
+            modeBtn.setImage(UIImage(named: "freestyle_btn"), for: .normal)
+            modeBtn.setImage(UIImage(named: "gameMode_btn"), for: .highlighted )
+        } else {
+            doremifaMode = Mode.GameMode
+            modeBtn.setImage(UIImage(named: "gameMode_btn"), for: .normal)
+            modeBtn.setImage(UIImage(named: "freestyle_btn"), for: .highlighted )
+        }
+    }
+    
     
     //Colored buttons set up
     func setupButtons() {
@@ -197,7 +226,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate {
     
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        print("Player finish playing", player)
+        //print("Player finish playing", player)
         
         if currentItem <= soundsSequence.count - 1 {
             //adding delay between the sounds
