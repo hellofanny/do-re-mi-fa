@@ -36,21 +36,24 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate {
         let view = UIView()
         view.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
        
+        let logoView = UIImageView(image: UIImage(named: "doremifa_logo"))
+        logoView.frame = CGRect(x: 150, y: 20, width: 180, height: 77)
+        view.addSubview(logoView)
 
-        self.label.frame = CGRect(x: 150, y: 20, width: 200, height: 20)
+        self.label.frame = CGRect(x: 200, y: 100, width: 200, height: 20)
         self.label.text = "Play with me!"
         self.label.textColor = .black
         view.addSubview(self.label)
         
         
-        self.startBtn.frame = CGRect(x: 150, y: 40, width: 100, height: 20)
+        self.startBtn.frame = CGRect(x: 200, y: 120, width: 100, height: 20)
         self.startBtn.setTitle("Start Game", for: .normal)
         self.startBtn.backgroundColor = #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1)
         self.startBtn.addTarget(self, action: #selector(startGame), for: .touchUpInside)
         view.addSubview(self.startBtn)
         
         
-        self.squareView.frame = CGRect(x: 100, y: 100, width: 200, height: 200)
+        self.squareView.frame = CGRect(x: 150, y: 160, width: 200, height: 200)
         view.addSubview(self.squareView)
         
         self.setupAudioFiles()
@@ -236,6 +239,6 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate {
 
 // Present the view controller in the Live View window
 let viewController = MyViewController()
-viewController.preferredContentSize = CGSize(width: 400, height: 400)
+viewController.preferredContentSize = CGSize(width: 500, height: 500)
 
 PlaygroundPage.current.liveView = viewController
