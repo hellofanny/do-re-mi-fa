@@ -19,7 +19,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate {
     let greenBtn = UIButton()
     let purpleBtn = UIButton()
     
-    let startBtn = UIButton()
+    let startGameBtn = UIButton()
     let label = UILabel()
     let modeBtn = UIButton()
     
@@ -58,15 +58,13 @@ modeBtn.setImage(UIImage(named: "gameMode_btn"), for: .normal)
         view.addSubview(self.label)
         
         
-        self.startBtn.frame = CGRect(x: 200, y: 380, width: 100, height: 20)
-        self.startBtn.setTitle("Start Game", for: .normal)
-        self.startBtn.backgroundColor = #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1)
-        self.startBtn.addTarget(self, action: #selector(startGame), for: .touchUpInside)
-        view.addSubview(self.startBtn)
-        
-        
         self.squareView.frame = CGRect(x: 150, y: 160, width: 200, height: 200)
         view.addSubview(self.squareView)
+        
+        self.startGameBtn.setImage(UIImage(named: "play_btn"), for: .normal)
+        self.startGameBtn.frame = CGRect(x: (squareView.frame.width)/2 - 30, y: (squareView.frame.height/2) - 30, width: 60, height: 60)
+        self.startGameBtn.addTarget(self, action: #selector(startGame), for: .touchUpInside)
+        squareView.addSubview(self.startGameBtn)
         
         self.setupAudioFiles()
         self.setupButtons()
@@ -87,10 +85,12 @@ modeBtn.setImage(UIImage(named: "gameMode_btn"), for: .normal)
     @objc func changeMode() {
         if doremifaMode == Mode.GameMode {
             doremifaMode = Mode.Freestyle
+             self.startGameBtn.isHidden = true
             modeBtn.setImage(UIImage(named: "freestyle_btn"), for: .normal)
             modeBtn.setImage(UIImage(named: "gameMode_btn"), for: .highlighted )
         } else {
             doremifaMode = Mode.GameMode
+            self.startGameBtn.isHidden = false
             modeBtn.setImage(UIImage(named: "gameMode_btn"), for: .normal)
             modeBtn.setImage(UIImage(named: "freestyle_btn"), for: .highlighted )
         }
@@ -191,13 +191,15 @@ modeBtn.setImage(UIImage(named: "gameMode_btn"), for: .normal)
     
     @objc func startGame() {
         soundsSequence = []
-        
         currentLevel = 1
         print("New level: \(currentLevel)")
         
         addSoundToSequence()
         
-        playNextItem()
+        self.startGameBtn.isHidden = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
+            self.playNextItem()
+        }
     }
     
     func startNewLevel() {
