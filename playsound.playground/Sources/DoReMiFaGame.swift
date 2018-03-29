@@ -48,37 +48,34 @@ public class DoReMiFaGame {
         self.playNextItem()
     }
     
-    public func resetGame(){
+    public func resetGame() {
         self.currentLevel = 0
         self.currentItem = 0
         self.numberOfButtonsPressed = 0
         self.soundsSequence = []
     }
     
-    public func afterSoundIsPlayed(){
+    public func afterSoundIsPlayed() {
         if self.currentItem <= self.soundsSequence.count - 1 {
             //adding delay between the sounds
             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(50)) {
                 self.playNextItem()
             }
-        }else{
+        } else {
             //TO DO: User turn
             self.resetButtonsHighlights()
         }
     }
     
     public func playNextItem () {
-        print("played sound :", soundsSequence[currentItem])
-        
         let playedSound = soundsSequence[currentItem]
+        print("played sound :", playedSound)
         
         self.resetButtonsHighlights()
         self.highlightButton(buttonTag: playedSound)
         self.sounds[playedSound].play()
         self.currentItem += 1
-        
     }
-    
     
     func resetButtonsHighlights() {
         self.pinkBtn.setImage(UIImage(named: "pink_btn"), for: .normal)
@@ -86,7 +83,6 @@ public class DoReMiFaGame {
         self.greenBtn.setImage(UIImage(named: "green_btn"), for: .normal)
         self.purpleBtn.setImage(UIImage(named: "purple_btn"), for: .normal)
     }
-    
     
     func highlightButton(buttonTag: Int) {
         switch buttonTag {
@@ -114,7 +110,6 @@ public class DoReMiFaGame {
     public func checkPressedButton(buttonPressed: Int) {
         
         if buttonPressed == self.soundsSequence[self.numberOfButtonsPressed] {
-            
             if self.numberOfButtonsPressed == (self.defaultMaxLevel - 1) {
                 print("WON THE GAME")
             } else if self.numberOfButtonsPressed == self.soundsSequence.count - 1 {
@@ -127,9 +122,8 @@ public class DoReMiFaGame {
             self.numberOfButtonsPressed += 1
             
         } else {
-            //GAME OVER
+             //TO DO: GAME OVER
             print("game over!")
-            
         }
     }
 }

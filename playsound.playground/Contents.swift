@@ -28,7 +28,6 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate {
     
     var game : DoReMiFaGame!
     
-    
     override func loadView() {
         
         let view = UIView()
@@ -145,7 +144,6 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate {
     
     
     @objc func startGame() {
-        
         self.game.resetGame()
         self.playBtn.isHidden = true
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
