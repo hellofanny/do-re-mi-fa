@@ -7,7 +7,7 @@ import PlaygroundSupport
 let cfURL = Bundle.main.url(forResource: "Cardenio Modern Bold", withExtension: "ttf")! as CFURL
 CTFontManagerRegisterFontsForURL(cfURL, CTFontManagerScope.process, nil)
 
-class MyViewController : UIViewController, AVAudioPlayerDelegate {
+class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDelegate {
     
     let squareView = UIView()
     
@@ -49,7 +49,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate {
         self.label.text = "Play with me!"
         view.addSubview(self.label)
         
-        self.squareView.frame = CGRect(x: 150, y: 160, width: 200, height: 200)
+        self.squareView.frame = CGRect(x: 150, y: 180, width: 200, height: 200)
         view.addSubview(self.squareView)
         
         self.playBtn.setImage(UIImage(named: "play_btn"), for: .normal)
@@ -59,18 +59,41 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate {
         
         self.setupAudioFiles()
         self.setupButtons()
-        self.game = DoReMiFaGame(sounds: sounds, pinkBtn: self.pinkBtn, yellowBtn: self.yellowBtn, greenBtn: self.greenBtn, purpleBtn: self.purpleBtn)
+        self.game = DoReMiFaGame(sounds: sounds, pinkBtn: self.pinkBtn, yellowBtn: self.yellowBtn, greenBtn: self.greenBtn, purpleBtn: self.purpleBtn, delegate: self)
         
         self.view = view
+        print(self.game.getGameState())
+ 
+    }
+    
+    func gameOver() {
+        self.label.text = "Game Over!"
+        self.playBtn.isHidden = false
+        self.playBtn.setImage(UIImage(named: "replay_btn"), for: .normal)
+    }
+    
+    func newLevel() {
+        self.label.text = "Level:  \(self.game.getCurrentLevel())"
+    }
+    
+    func userWonTheGame() {
+        self.label.text = "Congratulations!"
+        self.playBtn.isHidden = false
+        self.playBtn.setImage(UIImage(named: "replay_btn"), for: .normal)
     }
     
     @objc func buttonAction(sender: UIButton) {
-        if doremifaMode == Mode.Freestyle {
+        
+        print(self.game.getGameState())
+        
+        if doremifaMode == Mode.Freestyle || self.game.getGameState() == GameState.NotPlaying {
             sounds[sender.tag].play()
+            
         } else {
             sounds[sender.tag].play()
-            print("buttonPressed: ", sender.tag)
-            self.game.checkPressedButton(buttonPressed: sender.tag)
+            if (self.game.continueToCheck() == true){
+                self.game.checkPressedButton(buttonPressed: sender.tag)
+            }
         }
     }
     
@@ -148,14 +171,18 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate {
         self.playBtn.isHidden = true
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
             self.game.startNewLevel()
-            print(self.game.currentLevel)
+            print(self.game.getCurrentLevel())
         }
     }
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        print("Player finish playing", player)
-        self.game.afterSoundIsPlayed()
+        if game.getGameState() == GameState.SequencePlaying {
+            self.game.afterSoundIsPlayed()
+        }
+        print(game.getGameState())
     }
+    
+    
 }
 
 
