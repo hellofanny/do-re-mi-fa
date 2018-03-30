@@ -27,6 +27,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
     let modeBtn = UIButton()
     let levelLabel = UILabel()
     
+    let recordBtn = UIButton()
     
     var game : DoReMiFaGame!
     
@@ -66,6 +67,14 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
         self.playBtn.frame = CGRect(x: (squareView.frame.width)/2 - 30, y: (squareView.frame.height/2) - 30, width: 60, height: 60)
         self.playBtn.addTarget(self, action: #selector(self.startGame), for: .touchUpInside)
         squareView.addSubview(self.playBtn)
+        
+        self.recordBtn.setImage(UIImage(named: "record_btn"), for: .normal)
+        self.recordBtn.frame = CGRect(x: (squareView.frame.width)/2 - 30, y: (squareView.frame.height/2) - 30, width: 60, height: 60)
+        //TO DO: Record Btn
+//        self.recordBtn.addTarget(self, action: #selector(self.startGame), for: .touchUpInside)
+        self.recordBtn.isHidden = true
+        squareView.addSubview(self.recordBtn)
+        
         
         self.setupAudioFiles()
         self.setupButtons()
@@ -151,12 +160,14 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
         if self.doremifaMode == Mode.GameMode {
             self.doremifaMode = Mode.Freestyle
             self.playBtn.isHidden = true
+            self.recordBtn.isHidden = false
             self.infoLabel.text = "Make some noise."
             self.modeBtn.setImage(UIImage(named: "freestyle_btn"), for: .normal)
             self.modeBtn.setImage(UIImage(named: "gameMode_btn"), for: .highlighted)
         } else {
             self.doremifaMode = Mode.GameMode
             self.playBtn.isHidden = false
+            self.recordBtn.isHidden = true
             self.playBtn.setImage(UIImage(named: "play_btn"), for: .normal)
             self.infoLabel.text = "Can you follow my notes?"
             self.levelLabel.text = ""
