@@ -142,7 +142,7 @@ public class DoReMiFaGame {
     }
     
     public func checkPressedButton(buttonPressed: Int) {
-        
+        print("button pressed: ", buttonPressed)
         if buttonPressed == self.soundsSequence[self.numberOfButtonsPressed] {
             if self.numberOfButtonsPressed == (self.defaultMaxLevel - 1) {
                 //print("WON THE GAME")

@@ -43,9 +43,10 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
         self.modeBtn.addTarget(self, action: #selector(self.changeMode), for: .touchUpInside)
         view.addSubview(modeBtn)
         
-        self.label.frame = CGRect(x: 200, y: 400, width: 200, height: 20)
+        self.label.frame = CGRect(x: 125, y: 400, width: 250, height: 20)
         self.label.textColor = .gray
         self.label.font = UIFont(name: "Cardenio Modern", size: 22)
+        self.label.textAlignment = .center
         self.label.text = "Play with me!"
         view.addSubview(self.label)
         
@@ -62,15 +63,30 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
         self.game = DoReMiFaGame(sounds: sounds, pinkBtn: self.pinkBtn, yellowBtn: self.yellowBtn, greenBtn: self.greenBtn, purpleBtn: self.purpleBtn, delegate: self)
         
         self.view = view
-        print(self.game.getGameState())
- 
+        
     }
     
     func gameOver() {
-        self.label.text = "Game Over!"
-        self.playBtn.isHidden = false
+        
+        self.label.text = "Opps.. Game Over!"
+        self.label.fadeOut()
         self.playBtn.setImage(UIImage(named: "replay_btn"), for: .normal)
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
+            self.squareView.fadeOut()
+          
+            self.squareView.fadeIn(completion: {
+                (finished: Bool) -> Void in
+                self.label.text = "You can always try again!"
+                self.label.fadeIn(completion: {
+                    (finished: Bool) -> Void in
+                    
+                    self.playBtn.isHidden = false
+                })
+               
+            })
+        }
     }
+    
     
     func newLevel() {
         self.label.text = "Level:  \(self.game.getCurrentLevel())"
@@ -101,11 +117,14 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
         if self.doremifaMode == Mode.GameMode {
             self.doremifaMode = Mode.Freestyle
             self.playBtn.isHidden = true
+            self.label.text = "Make some noise."
             self.modeBtn.setImage(UIImage(named: "freestyle_btn"), for: .normal)
             self.modeBtn.setImage(UIImage(named: "gameMode_btn"), for: .highlighted)
         } else {
             self.doremifaMode = Mode.GameMode
             self.playBtn.isHidden = false
+            self.playBtn.setImage(UIImage(named: "play_btn"), for: .normal)
+            self.label.text = "Play with me."
             self.modeBtn.setImage(UIImage(named: "gameMode_btn"), for: .normal)
             self.modeBtn.setImage(UIImage(named: "freestyle_btn"), for: .highlighted )
         }
@@ -169,9 +188,8 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
     @objc func startGame() {
         self.game.resetGame()
         self.playBtn.isHidden = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
             self.game.startNewLevel()
-            print(self.game.getCurrentLevel())
         }
     }
     
@@ -182,9 +200,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
         print(game.getGameState())
     }
     
-    
 }
-
 
 
 // Present the view controller in the Live View window
