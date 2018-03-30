@@ -33,10 +33,10 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
     override func loadView() {
         
         let view = UIView()
-        view.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        view.layer.contents = UIImage(named: "background_img")?.cgImage
         
         let logoView = UIImageView(image: UIImage(named: "doremifa_logo"))
-        logoView.frame = CGRect(x: 150, y: 20, width: 180, height: 77)
+        logoView.frame = CGRect(x: 150, y: 35, width: 180, height: 77)
         view.addSubview(logoView)
         
         self.modeBtn.setImage(UIImage(named: "gameMode_btn"), for: .normal)
@@ -45,7 +45,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
         self.modeBtn.addTarget(self, action: #selector(self.changeMode), for: .touchUpInside)
         view.addSubview(modeBtn)
         
-        self.squareView.frame = CGRect(x: 150, y: 180, width: 200, height: 200)
+        self.squareView.frame = CGRect(x: 150, y: 185, width: 200, height: 200)
         view.addSubview(self.squareView)
         
         self.infoLabel.frame = CGRect(x: 125, y: 400, width: 250, height: 20)
@@ -55,7 +55,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
         self.infoLabel.text = "Can you follow my notes?"
         view.addSubview(self.infoLabel)
         
-        self.levelLabel.frame = CGRect(x: 145, y: 155, width: 150, height: 20)
+        self.levelLabel.frame = CGRect(x: 145, y: 160, width: 150, height: 20)
         self.levelLabel.textColor = .gray
         self.levelLabel.font = UIFont(name: "Cardenio Modern", size: 18)
         self.levelLabel.text = ""
