@@ -48,7 +48,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
         self.squareView.frame = CGRect(x: 150, y: 185, width: 200, height: 200)
         view.addSubview(self.squareView)
         
-        self.infoLabel.frame = CGRect(x: 125, y: 400, width: 250, height: 20)
+        self.infoLabel.frame = CGRect(x: 125, y: 408, width: 250, height: 20)
         self.infoLabel.textColor = .gray
         self.infoLabel.font = UIFont(name: "Cardenio Modern", size: 22)
         self.infoLabel.textAlignment = .center

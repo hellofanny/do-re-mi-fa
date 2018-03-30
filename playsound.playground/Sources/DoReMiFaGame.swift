@@ -83,6 +83,7 @@ public class DoReMiFaGame {
         self.currentItem = 0
         self.numberOfButtonsPressed = 0
         self.soundsSequence = []
+        self.enableColorButtons()
     }
     
     public func afterSoundIsPlayed() {
