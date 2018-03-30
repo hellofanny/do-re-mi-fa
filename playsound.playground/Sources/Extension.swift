@@ -15,4 +15,18 @@ extension UIView {
             self.alpha = 0.0
         }, completion: completion)
     }
+    
+    public func blink() {
+        self.alpha = 0.0;
+        UIView.animate(withDuration: 0.5,
+            delay: 0.0,
+            options: [.curveEaseInOut, .autoreverse, .repeat],
+            animations: { [weak self] in self?.alpha = 1.0 },
+            completion: { [weak self] _ in self?.alpha = 0.0 })
+    }
+    
+    public func stopBlink() {
+        layer.removeAllAnimations()
+        alpha = 1
+    }
 }

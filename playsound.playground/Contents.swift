@@ -77,10 +77,12 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
     
     func gameOver() {
         self.infoLabel.text = "Opps.. Game Over!"
+        self.infoLabel.blink()
         self.playBtn.setImage(UIImage(named: "replay_btn"), for: .normal)
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) {
             self.squareView.fadeOut()
             self.infoLabel.text = ""
+            self.infoLabel.stopBlink()
             self.squareView.fadeIn(completion: {
                 (finished: Bool) -> Void in
                 self.infoLabel.text = "You can always try again!"
@@ -101,8 +103,23 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
     
     func userWonTheGame() {
         self.infoLabel.text = "Congratulations!"
-        self.playBtn.isHidden = false
+        self.infoLabel.blink()
+        
         self.playBtn.setImage(UIImage(named: "replay_btn"), for: .normal)
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) {
+            self.squareView.fadeOut()
+            self.infoLabel.text = ""
+            self.infoLabel.stopBlink()
+            self.squareView.fadeIn(completion: {
+                (finished: Bool) -> Void in
+                self.infoLabel.text = "Play again!"
+                self.infoLabel.fadeIn(completion: {
+                    (finished: Bool) -> Void in
+                    self.playBtn.isHidden = false
+                })
+                
+            })
+        }
     }
     
     @objc func buttonAction(sender: UIButton) {
