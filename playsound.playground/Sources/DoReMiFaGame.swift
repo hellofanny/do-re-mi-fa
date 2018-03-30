@@ -54,6 +54,7 @@ public class DoReMiFaGame {
     public func startNewLevel() {
         self.currentLevel += 1
         self.delegate?.newLevel()
+        self.gameState = GameState.SequencePlaying
         
         print("New level: \(currentLevel)")
         self.currentItem = 0
@@ -62,8 +63,6 @@ public class DoReMiFaGame {
         
         self.addSoundToSequence()
         print("Sound Sequence:",soundsSequence)
-        
-        self.gameState = GameState.SequencePlaying
         self.playNextItem()
     }
     
@@ -142,10 +141,11 @@ public class DoReMiFaGame {
     }
     
     public func checkPressedButton(buttonPressed: Int) {
-        print("button pressed: ", buttonPressed)
+        print("button pressed:", buttonPressed)
         if buttonPressed == self.soundsSequence[self.numberOfButtonsPressed] {
             if self.numberOfButtonsPressed == (self.defaultMaxLevel - 1) {
                 //print("WON THE GAME")
+                self.gameState = GameState.NotPlaying
                 self.delegate?.userWonTheGame()
                 self.disableColorButtons()
                 
@@ -161,6 +161,7 @@ public class DoReMiFaGame {
             
         } else {
             //print("GAME OVER!")
+            self.gameState = GameState.NotPlaying
             self.delegate?.gameOver()
             self.disableColorButtons()
         }
