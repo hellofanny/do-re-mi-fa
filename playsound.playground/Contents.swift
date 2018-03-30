@@ -14,7 +14,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
     var doremifaMode : Mode = Mode.GameMode
     
     var sounds = [AVAudioPlayer]()
-    let soundsNames = ["sound_pink", "sound_yellow", "sound_green", "sound_purple"]
+    let soundsNames = ["sound_pink", "sound_yellow", "sound_green", "sound_purple", "success_sound", "gameOver_sound"]
     
     //colored buttons
     let pinkBtn = UIButton()
@@ -76,6 +76,10 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
     }
     
     func gameOver() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+            self.sounds[5].play()
+        }
+        
         self.infoLabel.text = "Opps.. Game Over!"
         self.infoLabel.blink()
         self.playBtn.setImage(UIImage(named: "replay_btn"), for: .normal)
@@ -102,6 +106,10 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
     }
     
     func userWonTheGame() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+            self.sounds[4].play()
+        }
+        
         self.infoLabel.text = "Congratulations!"
         self.infoLabel.blink()
         
@@ -112,7 +120,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
             self.infoLabel.stopBlink()
             self.squareView.fadeIn(completion: {
                 (finished: Bool) -> Void in
-                self.infoLabel.text = "Play again!"
+                self.infoLabel.text = "Congrats, play again!"
                 self.infoLabel.fadeIn(completion: {
                     (finished: Bool) -> Void in
                     self.playBtn.isHidden = false
