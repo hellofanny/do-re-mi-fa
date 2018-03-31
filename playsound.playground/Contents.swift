@@ -190,6 +190,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
         self.playGameBtn.isHidden = true
         self.modeBtn.isUserInteractionEnabled = false
         self.infoLabel.text = "Get ready!"
+        self.infoLabel.blink(stopAfter: 1.2)
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
             self.game.startNewLevel()
         }
