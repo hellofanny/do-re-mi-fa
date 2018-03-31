@@ -19,7 +19,7 @@ public class DoReMiFaGame {
     var currentLevel = 0
     let defaultMaxLevel = 5
     
-    var gameState = GameState.NotPlaying
+    var gameStatus = GameStatus.NotPlaying
     
     var sounds : [AVAudioPlayer]
     
@@ -54,7 +54,7 @@ public class DoReMiFaGame {
     public func startNewLevel() {
         self.currentLevel += 1
         self.delegate?.newLevel()
-        self.gameState = GameState.SequencePlaying
+        self.gameStatus = GameStatus.SequencePlaying
         
         print("New level: \(currentLevel)")
         self.currentItem = 0
@@ -66,8 +66,8 @@ public class DoReMiFaGame {
         self.playNextItem()
     }
     
-    public func getGameState() -> GameState {
-        return self.gameState
+    public func getGameStatus() -> GameStatus {
+        return self.gameStatus
     }
     
     public func getCurrentLevel() -> Int {
@@ -96,7 +96,7 @@ public class DoReMiFaGame {
             }
         } else {
             //User turn
-            self.gameState = GameState.UserPlaying
+            self.gameStatus = GameStatus.UserPlaying
             self.enableColorButtons()
         }
     }
@@ -146,7 +146,7 @@ public class DoReMiFaGame {
         if buttonPressed == self.soundsSequence[self.numberOfButtonsPressed] {
             if self.numberOfButtonsPressed == (self.defaultMaxLevel - 1) {
                 //print("WON THE GAME")
-                self.gameState = GameState.NotPlaying
+                self.gameStatus = GameStatus.NotPlaying
                 self.delegate?.userWonTheGame()
                 self.disableColorButtons()
                 
@@ -162,7 +162,7 @@ public class DoReMiFaGame {
             
         } else {
             //print("GAME OVER!")
-            self.gameState = GameState.NotPlaying
+            self.gameStatus = GameStatus.NotPlaying
             self.delegate?.gameOver()
             self.disableColorButtons()
         }
