@@ -16,16 +16,16 @@ extension UIView {
         }, completion: completion)
     }
     
-    public func blink() {
-        self.alpha = 0.0;
-        UIView.animate(withDuration: 0.6, delay: 0.0,
-                       options: [.curveEaseInOut, .autoreverse, .repeat],
-                       animations: { [weak self] in self?.alpha = 1.0 },
-                       completion: { [weak self] _ in self?.alpha = 0.0 })
-    }
-    
-    public func stopBlink() {
-        layer.removeAllAnimations()
-        self.alpha = 1.0
+    public func blink(enabled: Bool = true, duration: CFTimeInterval = 0.6, stopAfter: CFTimeInterval = 0.0 ) {
+        enabled ? (UIView.animate(withDuration: duration,
+                                  delay: 0.0,
+                                  options: [.curveEaseInOut, .autoreverse, .repeat],
+                                  animations: { [weak self] in self?.alpha = 0.0 },
+                                  completion: { [weak self] _ in self?.alpha = 1.0 })) : self.layer.removeAllAnimations()
+        if !stopAfter.isEqual(to: 0.0) && enabled {
+            DispatchQueue.main.asyncAfter(deadline: .now() + stopAfter) { [weak self] in
+                self?.layer.removeAllAnimations()
+            }
+        }
     }
 }
