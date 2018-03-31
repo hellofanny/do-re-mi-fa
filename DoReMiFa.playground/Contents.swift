@@ -32,7 +32,6 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
     let recordBtn = UIButton()
     
     var game : DoReMiFaGame!
-    
     var recorder : DoReMiFaRecorder!
     
     override func loadView() {
@@ -81,7 +80,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
         self.recordBtn.frame = CGRect(x: (squareView.frame.width)/2 - 30, y: (squareView.frame.height/2) - 30, width: 60, height: 60)
         self.recordBtn.addTarget(self, action: #selector(self.startOrPlayRecording), for: .touchUpInside)
         self.recordBtn.isHidden = true
-        squareView.addSubview(self.recordBtn)
+        self.squareView.addSubview(self.recordBtn)
         
         self.setupAudioFiles()
         self.setupButtons()
@@ -189,11 +188,8 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
             let soundURL = Bundle.main.url(forResource: sound, withExtension: "wav")!
             do {
                 try self.sounds.append(AVAudioPlayer(contentsOf: soundURL))
-            } catch {
-                print(error)
-            }
+            } catch { print(error) }
         }
-        
         for audioPlayer in self.sounds {
             audioPlayer.delegate = self
             audioPlayer.numberOfLoops = 0
@@ -219,20 +215,15 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
     
     @objc func startOrPlayRecording() {
         self.modeBtn.isUserInteractionEnabled = false
-        
         if recorder.getRecordingStatus() == RecorderStatus.NotRecording {
-            
             self.sounds[6].play()
-            
             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
                 self.recorder.startRecording()
                 self.infoLabel.text = "Recording.."
                 self.infoLabel.blink()
                 self.recordBtn.isHidden = true
             }
-            
         }
-        
         if recorder.getRecordingStatus() == RecorderStatus.ReadyToPlay {
             //play the first item
             self.recorder.playNextItem()
@@ -242,7 +233,6 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
     
 
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        
         if game.getGameStatus() == GameStatus.SequencePlaying {
             self.game.afterSoundIsPlayed()
         }
@@ -259,11 +249,9 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
     
     //DoReMiFaGameDelegate implementation
     func gameOver() {
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
             self.sounds[5].play()
         }
-        
         self.infoLabel.text = "Opps.. Game Over!"
         self.infoLabel.blink()
         self.playGameBtn.setImage(UIImage(named: "replay_btn"), for: .normal)
@@ -290,18 +278,14 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
     }
     
     func userWonTheGame() {
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
             self.sounds[4].play()
             self.starView.isHidden = false
             self.starView.zoomInOut()
             self.starView.rotate()
         }
-        
         self.infoLabel.text = "Congratulations!"
         self.infoLabel.blink()
-        
-       
         self.playGameBtn.setImage(UIImage(named: "replay_btn"), for: .normal)
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) {
             self.squareView.fadeOut()
