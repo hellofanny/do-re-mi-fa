@@ -15,7 +15,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
     var doremifaMode : Mode = Mode.GameMode
     
     var sounds = [AVAudioPlayer]()
-    let soundsNames = ["sound_pink", "sound_yellow", "sound_green", "sound_purple", "success_sound", "gameOver_sound"]
+    let soundsNames = ["sound_pink", "sound_yellow", "sound_green", "sound_purple", "success_sound", "gameOver_sound", "beep_sound"]
     
     //colored buttons
     let pinkBtn = UIButton()
@@ -201,10 +201,16 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
         self.modeBtn.isUserInteractionEnabled = false
         
         if recorder.getRecordingStatus() == RecorderStatus.NotRecording {
-            self.recorder.startRecording()
-            self.infoLabel.text = "Recording.."
-            self.infoLabel.blink()
-            self.recordBtn.isHidden = true
+            
+            self.sounds[6].play()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+                self.recorder.startRecording()
+                self.infoLabel.text = "Recording.."
+                self.infoLabel.blink()
+                self.recordBtn.isHidden = true
+            }
+            
         }
         
         if recorder.getRecordingStatus() == RecorderStatus.ReadyToPlay {
