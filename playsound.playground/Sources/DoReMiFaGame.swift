@@ -177,7 +177,7 @@ public class DoReMiFaGame {
         }
     }
     
-    func disableColorButtons () {
+    public func disableColorButtons () {
         for button in coloredButtons {
             button.isUserInteractionEnabled = false
         }

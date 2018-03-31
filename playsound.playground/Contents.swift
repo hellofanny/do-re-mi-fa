@@ -186,7 +186,9 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
     
     @objc func startGame() {
         self.game.resetGame()
+        self.game.disableColorButtons()
         self.playGameBtn.isHidden = true
+        self.modeBtn.isUserInteractionEnabled = false
         self.infoLabel.text = "Get ready!"
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
             self.game.startNewLevel()
@@ -195,6 +197,8 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
     
     
     @objc func startOrPlayRecording() {
+        self.modeBtn.isUserInteractionEnabled = false
+        
         if recorder.getRecordingStatus() == RecorderStatus.NotRecording {
             self.recorder.startRecording()
             self.infoLabel.text = "Recording.."
@@ -247,6 +251,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
                 })
             })
         }
+        self.modeBtn.isUserInteractionEnabled = true
     }
     
     
@@ -277,6 +282,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
                 })
             })
         }
+        self.modeBtn.isUserInteractionEnabled = true
     }
     
     
@@ -291,6 +297,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
         self.recordBtn.setImage(UIImage(named: "record_btn"), for: .normal)
         self.infoLabel.text = "Record a new audio."
         self.recordBtn.isHidden = false
+        self.modeBtn.isUserInteractionEnabled = true
     }
     
     

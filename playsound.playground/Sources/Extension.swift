@@ -26,6 +26,6 @@ extension UIView {
     
     public func stopBlink() {
         layer.removeAllAnimations()
-        alpha = 1
+        self.alpha = 1.0
     }
 }
