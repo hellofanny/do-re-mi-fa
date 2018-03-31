@@ -13,6 +13,7 @@ import PlaygroundSupport
 //:Adding custom font to the project
 let cfURL = Bundle.main.url(forResource: "Cardenio Modern Bold", withExtension: "ttf")! as CFURL
 CTFontManagerRegisterFontsForURL(cfURL, CTFontManagerScope.process, nil)
+//Cardenio Modern Bold font](https://www.dafont.com/cardenio-modern.font) - by Nils Cordes
 //: Setting the DoReMiFaViewController
 let myViewController = DoReMiFaViewController()
 //:Present the DoReMiFaView in the Live View window
