@@ -28,4 +28,27 @@ extension UIView {
             }
         }
     }
+    
+    public func rotate() {
+        let rotation : CABasicAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
+        rotation.toValue = NSNumber(value: Double.pi * 2)
+        rotation.duration = 4
+        rotation.isCumulative = true
+        rotation.repeatCount = Float.greatestFiniteMagnitude
+        self.layer.add(rotation, forKey: "rotationAnimation")
+    }
+    
+    public func zoomInOut() {
+        UIView.animate(withDuration: 1,
+                       delay: 0.0,
+                       options: [.curveEaseInOut],
+                       animations: {
+                         self.transform = CGAffineTransform(scaleX: 0.25, y: 0.25)
+        },completion: {
+            (finished: Bool) -> Void in
+            self.transform = CGAffineTransform.identity
+        })
+    }
+
+    
 }

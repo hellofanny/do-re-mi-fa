@@ -27,6 +27,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
     let infoLabel = UILabel()
     let modeBtn = UIButton()
     let levelLabel = UILabel()
+    var starView = UIImageView()
     
     let recordBtn = UIButton()
     
@@ -64,6 +65,11 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
         self.levelLabel.font = UIFont(name: "Cardenio Modern", size: 18)
         self.levelLabel.text = ""
         view.addSubview(self.levelLabel)
+        
+        self.starView = UIImageView(image: UIImage(named: "starView"))
+        self.starView.frame = CGRect(x: 155, y: 180, width: 40, height: 40)
+        view.addSubview(self.starView)
+        self.starView.isHidden = true
         
         
         self.playGameBtn.setImage(UIImage(named: "playGame_btn"), for: .normal)
@@ -109,7 +115,18 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
     
     @objc func changeMode() {
         self.levelLabel.text = ""
+        self.starView.isHidden = true
         self.game.resetGame()
+      
+        self.infoLabel.isHidden = true
+        self.squareView.fadeOut()
+      
+        self.squareView.fadeIn(completion: {
+            (finished: Bool) -> Void in
+            self.infoLabel.isHidden = false
+            self.infoLabel.fadeIn()
+        })
+        
         if self.doremifaMode == Mode.GameMode {
             self.doremifaMode = Mode.Freestyle
             self.playGameBtn.isHidden = true
@@ -185,6 +202,9 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
     
     
     @objc func startGame() {
+        self.starView.layer.removeAllAnimations()
+        self.starView.isHidden = true
+      
         self.game.resetGame()
         self.game.disableColorButtons()
         self.playGameBtn.isHidden = true
@@ -239,6 +259,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
     
     //DoReMiFaGameDelegate implementation
     func gameOver() {
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
             self.sounds[5].play()
         }
@@ -269,13 +290,18 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
     }
     
     func userWonTheGame() {
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
             self.sounds[4].play()
+            self.starView.isHidden = false
+            self.starView.zoomInOut()
+            self.starView.rotate()
         }
         
         self.infoLabel.text = "Congratulations!"
         self.infoLabel.blink()
         
+       
         self.playGameBtn.setImage(UIImage(named: "replay_btn"), for: .normal)
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) {
             self.squareView.fadeOut()
