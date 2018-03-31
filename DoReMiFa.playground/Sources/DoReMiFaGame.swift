@@ -17,7 +17,7 @@ public class DoReMiFaGame {
     var numberOfButtonsPressed = 0
     var currentItem = 0
     var currentLevel = 0
-    
+
     //Setting the Max Level of the game
     let defaultMaxLevel = 7
     
