@@ -19,7 +19,7 @@ public class DoReMiFaGame {
     var currentLevel = 0
     
     //Setting the Max Level of the game
-    let defaultMaxLevel = 5
+    let defaultMaxLevel = 7
     
     var gameStatus = GameStatus.NotPlaying
     

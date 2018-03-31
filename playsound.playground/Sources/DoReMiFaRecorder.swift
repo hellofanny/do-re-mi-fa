@@ -15,7 +15,7 @@ public class DoReMiFaRecorder {
     var numberOfButtonsPressed = 0
     
     //Number Max of notes that will be recorded
-    let defaultMax = 5
+    let defaultMax = 8
     
     var recorderStatus = RecorderStatus.NotRecording
     
