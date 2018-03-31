@@ -114,7 +114,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
             self.doremifaMode = Mode.Freestyle
             self.playGameBtn.isHidden = true
             self.recordBtn.isHidden = false
-            self.infoLabel.text = "Make some noise."
+            self.infoLabel.text = "Create your track."
             self.modeBtn.setImage(UIImage(named: "freestyle_btn"), for: .normal)
             self.modeBtn.setImage(UIImage(named: "gameMode_btn"), for: .highlighted)
         } else {
@@ -202,6 +202,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
         if recorder.getRecordingStatus() == RecorderStatus.NotRecording {
             self.recorder.startRecording()
             self.infoLabel.text = "Recording.."
+            self.infoLabel.blink()
             self.recordBtn.isHidden = true
         }
         
@@ -241,7 +242,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) {
             self.squareView.fadeOut()
             self.infoLabel.text = ""
-            self.infoLabel.stopBlink()
+            self.infoLabel.blink(enabled: false)
             self.squareView.fadeIn(completion: {
                 (finished: Bool) -> Void in
                 self.infoLabel.text = "You can always try again!"
@@ -272,7 +273,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) {
             self.squareView.fadeOut()
             self.infoLabel.text = ""
-            self.infoLabel.stopBlink()
+            self.infoLabel.blink(enabled: false)
             self.squareView.fadeIn(completion: {
                 (finished: Bool) -> Void in
                 self.infoLabel.text = "Congrats, play again!"
@@ -290,6 +291,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
     func isTimeToPlay() {
         self.recordBtn.setImage(UIImage(named: "playRecorded_btn"), for: .normal)
         self.recordBtn.isHidden = false
+        self.infoLabel.blink(enabled: false)
         self.infoLabel.text = "Listen to your recording!"
     }
     
