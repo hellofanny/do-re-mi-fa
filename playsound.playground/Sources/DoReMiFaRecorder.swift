@@ -13,6 +13,7 @@ public class DoReMiFaRecorder {
     
     var currentItem = 0
     let defaultMax = 5
+    var pressedBtnCount = 0
 
     var recorderStatus = RecorderStatus.NotRecording
 
@@ -47,6 +48,7 @@ public class DoReMiFaRecorder {
     
     public func startRecording() {
         self.currentItem = 0
+        self.pressedBtnCount = 0
         self.enableColorButtons()
         self.recordedSequence = []
         print("Sound Sequence recorded:",recordedSequence)
@@ -78,8 +80,8 @@ public class DoReMiFaRecorder {
         let playedSound = recordedSequence[currentItem]
         print("played sound :", playedSound)
         
-        self.disableColorButtons()
         self.recorderStatus = RecorderStatus.PlayingSavedSequence
+        self.disableColorButtons()
         self.resetButtonsHighlights()
         self.highlightButton(buttonTag: playedSound)
         self.sounds[playedSound].play()
@@ -116,21 +118,27 @@ public class DoReMiFaRecorder {
         }
     }
     
+    
     public func savePressedColorSound (buttonPressed: Int) {
+        
         print("button pressed:", buttonPressed)
         print("seq count", self.recordedSequence.count)
+        print("seq pressedBtnCount", pressedBtnCount)
         
-        if self.recordedSequence.count == self.defaultMax {
-            print("time to play")
-            
+        if pressedBtnCount == self.defaultMax - 1 {
+            print("arrived at 5!!")
+            self.recordedSequence.append(buttonPressed)
+            print(recordedSequence)
             self.recorderStatus = RecorderStatus.ReadyToPlay
             self.delegate?.isTimeToPlay()
             self.disableColorButtons()
-            //delay for the next level
-        } else if self.recordedSequence.count < self.defaultMax {
+            
+        } else if pressedBtnCount < self.defaultMax {
             self.recordedSequence.append(buttonPressed)
             print(recordedSequence)
         }
+        
+        pressedBtnCount += 1
         
     }
     
