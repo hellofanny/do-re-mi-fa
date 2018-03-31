@@ -8,18 +8,20 @@ public protocol DoReMiFaRecorderDelegate {
 }
 
 public class DoReMiFaRecorder {
-    //save the sound sequence to be played
+    //Save the sound sequence to be played
     var recordedSequence = [Int]()
     
     var currentItem = 0
+    var numberOfButtonsPressed = 0
+    
+    //Number Max of notes that will be recorded
     let defaultMax = 5
-    var pressedBtnCount = 0
-
+    
     var recorderStatus = RecorderStatus.NotRecording
-
+    
     var sounds : [AVAudioPlayer]
     
-    //colored buttons
+    //Colored buttons
     let pinkBtn: UIButton
     let yellowBtn: UIButton
     let greenBtn: UIButton
@@ -48,37 +50,33 @@ public class DoReMiFaRecorder {
     
     public func startRecording() {
         self.currentItem = 0
-        self.pressedBtnCount = 0
+        self.numberOfButtonsPressed = 0
         self.enableColorButtons()
         self.recordedSequence = []
-        print("Sound Sequence recorded:",recordedSequence)
         self.recorderStatus = RecorderStatus.Recording
-        print(self.getRecordingStatus())
+        //print(self.getRecordingStatus())
     }
-
+    
     public func playTheSequence() {
         self.resetButtonsHighlights()
-    
+        
         if self.currentItem <= self.recordedSequence.count - 1 {
-            //adding delay between the sounds
-            print(currentItem)
-            print("next item")
-
+            //Adding delay between the sounds
             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(30)) {
                 self.playNextItem()
             }
         } else {
             self.recorderStatus = RecorderStatus.NotRecording
             self.enableColorButtons()
-            //Play saved sequence
-            print("Finish playing the recorded sequence")
+            
+            print("Finish playing the recorded sequence!")
             self.delegate?.sequenceDidFinishPlaying()
         }
     }
     
     public func playNextItem () {
-        let playedSound = recordedSequence[currentItem]
-        print("played sound :", playedSound)
+        let playedSound = self.recordedSequence[self.currentItem]
+        print("Played sound :", playedSound)
         
         self.recorderStatus = RecorderStatus.PlayingSavedSequence
         self.disableColorButtons()
@@ -121,24 +119,20 @@ public class DoReMiFaRecorder {
     
     public func savePressedColorSound (buttonPressed: Int) {
         
-        print("button pressed:", buttonPressed)
-        print("seq count", self.recordedSequence.count)
-        print("seq pressedBtnCount", pressedBtnCount)
-        
-        if pressedBtnCount == self.defaultMax - 1 {
-            print("arrived at 5!!")
+        if numberOfButtonsPressed == self.defaultMax - 1 {
+            print("Arrived at the max!")
             self.recordedSequence.append(buttonPressed)
-            print(recordedSequence)
             self.recorderStatus = RecorderStatus.ReadyToPlay
             self.delegate?.isTimeToPlay()
             self.disableColorButtons()
             
-        } else if pressedBtnCount < self.defaultMax {
+        } else if numberOfButtonsPressed < self.defaultMax {
             self.recordedSequence.append(buttonPressed)
-            print(recordedSequence)
+            
         }
         
-        pressedBtnCount += 1
+        print("Sound Sequence recorded:", self.recordedSequence)
+        self.numberOfButtonsPressed += 1
         
     }
     

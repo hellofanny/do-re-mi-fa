@@ -4,6 +4,7 @@ import UIKit
 import AVFoundation
 import PlaygroundSupport
 
+//Adding custom font to the project
 let cfURL = Bundle.main.url(forResource: "Cardenio Modern Bold", withExtension: "ttf")! as CFURL
 CTFontManagerRegisterFontsForURL(cfURL, CTFontManagerScope.process, nil)
 
@@ -72,7 +73,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
         
         self.recordBtn.setImage(UIImage(named: "record_btn"), for: .normal)
         self.recordBtn.frame = CGRect(x: (squareView.frame.width)/2 - 30, y: (squareView.frame.height/2) - 30, width: 60, height: 60)
-        self.recordBtn.addTarget(self, action: #selector(self.startRecording), for: .touchUpInside)
+        self.recordBtn.addTarget(self, action: #selector(self.startOrPlayRecording), for: .touchUpInside)
         self.recordBtn.isHidden = true
         squareView.addSubview(self.recordBtn)
         
@@ -82,69 +83,12 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
         
         self.recorder = DoReMiFaRecorder(sounds: sounds, pinkBtn: self.pinkBtn, yellowBtn: self.yellowBtn, greenBtn: self.greenBtn, purpleBtn: self.purpleBtn, delegate: self)
         
-        
         self.view = view
         
     }
     
-    func gameOver() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
-            self.sounds[5].play()
-        }
-        
-        self.infoLabel.text = "Opps.. Game Over!"
-        self.infoLabel.blink()
-        self.playGameBtn.setImage(UIImage(named: "replay_btn"), for: .normal)
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) {
-            self.squareView.fadeOut()
-            self.infoLabel.text = ""
-            self.infoLabel.stopBlink()
-            self.squareView.fadeIn(completion: {
-                (finished: Bool) -> Void in
-                self.infoLabel.text = "You can always try again!"
-                self.infoLabel.fadeIn(completion: {
-                    (finished: Bool) -> Void in
-                    self.playGameBtn.isHidden = false
-                })
-                
-            })
-        }
-    }
-    
-    
-    func newLevel() {
-        self.infoLabel.text = ""
-        self.levelLabel.text = "Level:  \(self.game.getCurrentLevel())"
-    }
-    
-    func userWonTheGame() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
-            self.sounds[4].play()
-        }
-        
-        self.infoLabel.text = "Congratulations!"
-        self.infoLabel.blink()
-        
-        self.playGameBtn.setImage(UIImage(named: "replay_btn"), for: .normal)
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) {
-            self.squareView.fadeOut()
-            self.infoLabel.text = ""
-            self.infoLabel.stopBlink()
-            self.squareView.fadeIn(completion: {
-                (finished: Bool) -> Void in
-                self.infoLabel.text = "Congrats, play again!"
-                self.infoLabel.fadeIn(completion: {
-                    (finished: Bool) -> Void in
-                    self.playGameBtn.isHidden = false
-                })
-                
-            })
-        }
-    }
-    
     
     @objc func buttonAction(sender: UIButton) {
-        
         //print(self.game.getGameStatus())
         
         if doremifaMode == Mode.Freestyle {
@@ -154,10 +98,10 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
             } else if self.recorder.getRecordingStatus() == RecorderStatus.NotRecording {
                 sounds[sender.tag].play()
             }
-            
+        
         } else {
             self.sounds[sender.tag].play()
-            if (self.game.continueToCheck() == true){
+            if (self.game.continueToCheck() == true) {
                 self.game.checkPressedButton(buttonPressed: sender.tag)
             }
         }
@@ -250,22 +194,21 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
     }
     
     
-    @objc func startRecording() {
-        
-        if recorder.getRecordingStatus() == RecorderStatus.NotRecording{
+    @objc func startOrPlayRecording() {
+        if recorder.getRecordingStatus() == RecorderStatus.NotRecording {
             self.recorder.startRecording()
-            self.infoLabel.text = "Recording!"
+            self.infoLabel.text = "Recording.."
             self.recordBtn.isHidden = true
         }
-
+        
         if recorder.getRecordingStatus() == RecorderStatus.ReadyToPlay {
             //play the first item
             self.recorder.playNextItem()
             self.recordBtn.isHidden = true
         }
-        
     }
     
+
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         
         if game.getGameStatus() == GameStatus.SequencePlaying {
@@ -276,16 +219,69 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
             self.infoLabel.text = "Your turn."
         }
         
-        print(recorder.getRecordingStatus())
+        //print(recorder.getRecordingStatus())
         if recorder.getRecordingStatus() == RecorderStatus.PlayingSavedSequence {
             self.recorder.playTheSequence()
-            print("call function to play sequence")
         }
-    
     }
     
+    //DoReMiFaGameDelegate implementation
+    func gameOver() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+            self.sounds[5].play()
+        }
+        
+        self.infoLabel.text = "Opps.. Game Over!"
+        self.infoLabel.blink()
+        self.playGameBtn.setImage(UIImage(named: "replay_btn"), for: .normal)
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) {
+            self.squareView.fadeOut()
+            self.infoLabel.text = ""
+            self.infoLabel.stopBlink()
+            self.squareView.fadeIn(completion: {
+                (finished: Bool) -> Void in
+                self.infoLabel.text = "You can always try again!"
+                self.infoLabel.fadeIn(completion: {
+                    (finished: Bool) -> Void in
+                    self.playGameBtn.isHidden = false
+                })
+            })
+        }
+    }
+    
+    
+    func newLevel() {
+        self.infoLabel.text = ""
+        self.levelLabel.text = "Level:  \(self.game.getCurrentLevel())"
+    }
+    
+    func userWonTheGame() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
+            self.sounds[4].play()
+        }
+        
+        self.infoLabel.text = "Congratulations!"
+        self.infoLabel.blink()
+        
+        self.playGameBtn.setImage(UIImage(named: "replay_btn"), for: .normal)
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(3)) {
+            self.squareView.fadeOut()
+            self.infoLabel.text = ""
+            self.infoLabel.stopBlink()
+            self.squareView.fadeIn(completion: {
+                (finished: Bool) -> Void in
+                self.infoLabel.text = "Congrats, play again!"
+                self.infoLabel.fadeIn(completion: {
+                    (finished: Bool) -> Void in
+                    self.playGameBtn.isHidden = false
+                })
+            })
+        }
+    }
+    
+    
+    //DoReMiFaRecorderDelegate implementation
     func isTimeToPlay() {
-        print("is time to play")
         self.recordBtn.setImage(UIImage(named: "playRecorded_btn"), for: .normal)
         self.recordBtn.isHidden = false
         self.infoLabel.text = "Listen to your recording!"
@@ -296,7 +292,7 @@ class MyViewController : UIViewController, AVAudioPlayerDelegate, DoReMiFaGameDe
         self.infoLabel.text = "Record a new audio."
         self.recordBtn.isHidden = false
     }
-
+    
     
 }
 

@@ -11,12 +11,14 @@ public protocol DoReMiFaGameDelegate {
 
 public class DoReMiFaGame {
     
-    //save the sound sequence of the game
+    //Save the sound sequence of the game
     var soundsSequence = [Int]()
     
     var numberOfButtonsPressed = 0
     var currentItem = 0
     var currentLevel = 0
+    
+    //Setting the Max Level of the game
     let defaultMaxLevel = 5
     
     var gameStatus = GameStatus.NotPlaying
@@ -56,13 +58,14 @@ public class DoReMiFaGame {
         self.delegate?.newLevel()
         self.gameStatus = GameStatus.SequencePlaying
         
-        print("New level: \(currentLevel)")
+        //print("New level: \(currentLevel)")
         self.currentItem = 0
         self.numberOfButtonsPressed = 0
         self.disableColorButtons()
         
         self.addSoundToSequence()
-        print("Sound Sequence:",soundsSequence)
+        print("Sound Sequence: ", self.soundsSequence)
+        //Play first sound
         self.playNextItem()
     }
     
@@ -90,7 +93,7 @@ public class DoReMiFaGame {
         self.resetButtonsHighlights()
         
         if self.currentItem <= self.soundsSequence.count - 1 {
-            //adding delay between the sounds
+            //Adding delay between the sounds
             DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(50)) {
                 self.playNextItem()
             }
@@ -102,9 +105,9 @@ public class DoReMiFaGame {
     }
     
     public func playNextItem () {
-        let playedSound = soundsSequence[currentItem]
+        let playedSound = self.soundsSequence[self.currentItem]
         print("played sound :", playedSound)
-    
+        
         self.resetButtonsHighlights()
         self.highlightButton(buttonTag: playedSound)
         self.sounds[playedSound].play()
@@ -142,7 +145,7 @@ public class DoReMiFaGame {
     }
     
     public func checkPressedButton(buttonPressed: Int) {
-        print("button pressed:", buttonPressed)
+        print("Button pressed:", buttonPressed)
         if buttonPressed == self.soundsSequence[self.numberOfButtonsPressed] {
             if self.numberOfButtonsPressed == (self.defaultMaxLevel - 1) {
                 //print("WON THE GAME")
@@ -154,7 +157,7 @@ public class DoReMiFaGame {
                 //at the last item of the sequence
                 //    self.disableColorButtons()
                 DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(2)) {
-                    //delay for the next level... add animation?
+                    //Delay for the next level... add animation?
                     self.startNewLevel()
                 }
             } 
