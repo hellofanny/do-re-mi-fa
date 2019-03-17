@@ -1,7 +1,7 @@
 
 /*:
  ![](doremifa_logo_small.png)
- This playground uses UIKit and AVFoundation, and it haves two main funcionallities:
+ This playground uses UIKit and AVFoundation, and it haves two main functionalities:
  - **DoReMiFa Game:** A sound memory game, the user can try to memorize the sequence and play along.
  
  - **DoReMiFa Recorder:** You can record a mini track using the available notes to listen later. 
